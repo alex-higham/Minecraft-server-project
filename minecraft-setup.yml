@@ -9,6 +9,15 @@
         update_cache: yes
         upgrade: yes
 
-    - name: Display completion message
+    - name: Install Java 21
+      apt:
+        name: openjdk-21-jre-headless
+        state: present
+    
+    - name: Verify Java Installation
+      command: java -version
+      register: java_version
+
+    - name: Display Java version
       debug:
-        msg: "System packages updated successfully!"
+        msg: "Java installed: {{ java_version.stderr_lines[0] }}"
