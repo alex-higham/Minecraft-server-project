@@ -32,7 +32,9 @@ resource "aws_instance" "app_server" {
 }
 
 data "aws_eip" "minecraft" {
-  public_ip = var.elastic_ip
+  tags = {
+      Name = "Minecraft Terraform-eip"
+    }
 }
 
 resource "aws_eip_association" "minecraft" {
