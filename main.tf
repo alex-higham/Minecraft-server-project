@@ -30,3 +30,13 @@ resource "aws_instance" "app_server" {
     Name = var.instance_name 
   }
 }
+
+resource "aws_eip" "minecraft" {
+  instance = aws_instance.app_server.id
+
+  tags = {
+    Name = "${var.instance_name}-eip"
+  }
+
+  depends_on = [aws_instance.app_server]
+}
