@@ -13,15 +13,20 @@ provider "aws" {
 }
 
 data "aws_security_group" "minecraft" {
-  name = "Minecraft Security"
+  name = var.security_group_name
+}
+
+data "aws_key_pair" "minecraft" {
+  key_name = var.key_name
 }
 
 resource "aws_instance" "app_server" {
   ami                    = "ami-075686beab831bb7f"
-  instance_type          = "t3.medium"
+  instance_type          = var.instance_type
   vpc_security_group_ids = [data.aws_security_group.minecraft.id]
+  key_name = data.aws_key_pair.minecraft.key_name
 
   tags = {
-    Name = "Minecraft Terraform"
+    Name = var.instance_name 
   }
 }
