@@ -1,0 +1,71 @@
+# .gitignore for Terraform + Ansible + AWS
+
+# Terraform Files
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+crash.log
+crash.*.log
+*.tfvars
+*.tfvars.json
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+
+# AWS Credentials & Keys
+*.pem
+*.p12
+*.pfx
+*.key
+.aws/
+aws-credentials
+credentials
+config
+
+# Ansible Files
+*.retry
+.vault_pass
+vault_password
+host_vars/
+group_vars/*/vault*
+*.vault
+ansible.cfg
+
+# Environment Variables
+.env
+.env.local
+.env.*.local
+
+# IDE Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary Files
+tmp/
+temp/
+*.tmp
+
+# Backup Files
+*.bak
+*.backup
