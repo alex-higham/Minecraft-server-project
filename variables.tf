@@ -21,3 +21,9 @@ variable "instance_name" {
   type        = string
   default     = "Minecraft Terraform"
 }
+
+variable "elastic_ip" {
+  description = "Existing Elastic IP address to associate with the instance"
+  type        = string
+  default     = "52.41.121.178"
+}

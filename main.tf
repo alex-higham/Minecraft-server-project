@@ -31,12 +31,11 @@ resource "aws_instance" "app_server" {
   }
 }
 
-resource "aws_eip" "minecraft" {
-  instance = aws_instance.app_server.id
+data "aws_eip" "minecraft" {
+  public_ip = var.elastic_ip
+}
 
-  tags = {
-    Name = "${var.instance_name}-eip"
-  }
-
-  depends_on = [aws_instance.app_server]
+resource "aws_eip_association" "minecraft" {
+  instance_id   = aws_instance.app_server.id
+  allocation_id = data.aws_eip.minecraft.id
 }
