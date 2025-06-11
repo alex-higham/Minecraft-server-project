@@ -1,0 +1,14 @@
+---
+- name: Setup Minecraft SErver
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Update system packages
+      apt:
+        update_cache: yes
+        upgrade: yes
+
+    - name: Display completion message
+      debug:
+        msg: "System packages updated successfully!"
