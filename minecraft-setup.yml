@@ -61,7 +61,42 @@
         owner: ubuntu
         group: ubuntu
 
-    - name: Display completion message
-      debug:
-        msg: "Minecraft server downloaded to {{ minecraft_dir }}"
+    - name: Create start script
+      copy:
+        content: |
+          #!/bin/bash
+          cd {{ minecraft_dir }}
+          java -Xms2048M -Xmx3072M -XX:+UseG1GC -jar server.jar nogui
+        dest: "{{ minecraft_dir }}/start.sh"
+        owner: ubuntu
+        group: ubuntu
+        mode: '0755'
+        
+    - name: Create systemd service file
+      copy:
+        content: |
+          [Unit]
+          Description=Minecraft Server
+          After=network.target
 
+          [Service]
+          User=ubuntu
+          WorkingDirectory={{ minecraft_dir }}
+          ExecStart=/bin/bash -c '/usr/bin/tmux new-session -d -s minecraft "{{ minecraft_dir }}/start.sh"'
+          ExecStop=/bin/bash -c '/usr/bin/tmux send-keys -t minecraft "say SERVER SHUTTING DOWN IN 10 SECONDS. Saving map..." C-m && sleep 5 && /usr/bin/tmux send-keys -t minecraft "save-all" C-m && sleep 5 && /usr/bin/tmux send-keys -t minecraft "stop" C-m && sleep 10'
+          Type=oneshot
+          RemainAfterExit=yes
+          Restart=on-failure
+          RestartSec=30
+
+          [Install]
+          WantedBy=multi-user.target
+        dest: /etc/systemd/system/minecraft.service
+        mode: '0644'
+        
+    - name: Enable and start Minecraft service
+      systemd:
+        name: minecraft
+        enabled: yes
+        state: started
+        daemon_reload: yes
