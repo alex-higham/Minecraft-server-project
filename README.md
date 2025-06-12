@@ -105,12 +105,48 @@ The following graphic was made via an LLM since I wasn't sure how to effectively
 
 #### Step 1
 
-The first thing to that should be done is run an update and for the OS and install the necessary tools if they aren't already installed.  Since this was coded in Ubuntu 24.04, I used the apt package-manager for the install. 
+The first thing to that should be done is update the OS and install the necessary tools if they aren't already installed.  Since this was coded in Ubuntu 24.04, I used the apt package-manager for the install.  If you already have the tools installed, you can skip this step. 
 
+##### AWS CLI v2
    ```bash
    sudo apt update
-   sudo apt install -y terraform ansible awscli
+   # Install required utilities
+   sudo apt install -y curl wget git unzip
+   # Download and install AWS CLI v2
+   curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+   unzip awscliv2.zip
+   sudo ./aws/install
+
+   # Verify installation
+   aws --version
    ```
+##### Terraform
+  ```bash
+   # Add HashiCorp GPG key
+   wget -O- https://apt.releases.hashicorp.com/gpg | \
+     gpg --dearmor | \
+     sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null
+
+   # Add HashiCorp repository
+   echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
+     https://apt.releases.hashicorp.com $(lsb_release -cs) main" | \
+     sudo tee /etc/apt/sources.list.d/hashicorp.list
+
+   # Update package list and install Terraform
+   sudo apt update
+   sudo apt install terraform
+
+   # Verify installation
+   terraform --version
+   ```
+##### Ansible
+  ```bash
+  # Install Ansible Core
+  sudo apt install ansible-core
+
+  # Verify installation
+  ansible --version
+  ```
 #### Step 2
 
 If it hasn't been done already, move the SSH key for the AWS instance into the correct directory and give it the correct user permissions.  You might want to verify that your AWS credentials are also set up correctly.  Replace the information shown below with your known credentials.
@@ -144,7 +180,7 @@ terraform fmt
 terraform validate
 terraform apply
 ```
-
+After the last command is ran, Terraform will ask if you want to run the script.  Type yes and enter to start the build.
 #### Step 5
 
 Wait until the script finishes.  It might take a while for it to complete.  If the additional variables are set correctly, then the script should output the IP address and port number needed to connect to the server via the Minecraft client.  It will also output the necessary ssh command to connect to the server to verify the install and make any other changes to the server setup.
@@ -152,3 +188,8 @@ Wait until the script finishes.  It might take a while for it to complete.  If t
 #### Step 6
 
 Enjoy the Minecraft server!
+
+## References
+
+AWS CLI Installation Guide - Official AWS documentation for installing AWS CLI v2
+Terraform Installation Guide - Official HashiCorp documentation for installing Terraform
