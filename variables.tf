@@ -4,6 +4,12 @@ variable "key_name" {
   default     = "Minecraft Key"
 }
 
+variable "key_file" {
+  description = "Local key file path"
+  type        = string
+  default     = "~/.ssh/Minecraft Key.pem"
+}
+
 variable "security_group_name" {
   description = "Name of the security group"
   type        = string

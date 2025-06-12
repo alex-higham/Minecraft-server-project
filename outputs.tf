@@ -10,5 +10,5 @@ output "minecraft_server_address" {
 
 output "ssh_connection" {
   description = "SSH command to connect to the server"
-  value       = "ssh -i '${var.key_name}.pem' ubuntu@${data.aws_eip.minecraft.public_ip}"
+  value       = "ssh -i '${pathexpand(var.key_file)}' ubuntu@${data.aws_eip.minecraft.public_ip}"
 }

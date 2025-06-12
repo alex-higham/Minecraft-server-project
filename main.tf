@@ -62,7 +62,7 @@ resource "null_resource" "minecraft_setup" {
   }
 
   provisioner "local-exec" {
-    command = "ansible-playbook -i '${data.aws_eip.minecraft.public_ip},' --private-key='${var.key_name}.pem' --user=ubuntu --ssh-extra-args='-o StrictHostKeyChecking=no -o ConnectTimeout=30' minecraft-setup.yml"
+    command = "ansible-playbook -i '${data.aws_eip.minecraft.public_ip},' --private-key='${pathexpand(var.key_file)}' --user=ubuntu --ssh-extra-args='-o StrictHostKeyChecking=no -o ConnectTimeout=30' minecraft-setup.yml"   
     
     environment = {
       ANSIBLE_HOST_KEY_CHECKING = "False"
