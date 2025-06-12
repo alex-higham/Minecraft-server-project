@@ -191,5 +191,5 @@ Enjoy the Minecraft server!
 
 ## References
 
-AWS CLI Installation Guide - Official AWS documentation for installing AWS CLI v2
-Terraform Installation Guide - Official HashiCorp documentation for installing Terraform
+- [AWS CLI Installation Guide](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) - Official AWS documentation for installing AWS CLI v2
+- [Terraform Installation Guide](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) - Official HashiCorp documentation for installing Terraform
