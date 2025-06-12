@@ -5,12 +5,18 @@
   vars:
     minecraft_jar_url: "https://piston-data.mojang.com/v1/objects/e6ec2f64e6080b9b5d9b471b291c33cc7f509733/server.jar"
     minecraft_dir: "/home/ubuntu/Minecraft"
+    max_players: 10
 
   tasks:
     - name: Update system packages
       apt:
         update_cache: yes
         upgrade: yes
+
+    - name: Install tmux (for server management)
+      apt:
+        name: tmux
+        state: present
 
     - name: Install Java 21
       apt:
@@ -33,10 +39,25 @@
         group: ubuntu
         mode: '0644'
 
+    - name: Open server jar
+      command: java -jar server.jar nogui
+      args:
+        chdir: "{{ minecraft_dir }}"
+      become_user: ubuntu
+      ignore_errors: yes
+
     - name: Accept EULA
       copy:
         content: "eula=true"
-        dest: "{{ minecraft_dir}}/eula.txt"
+        dest: "{{ minecraft_dir }}/eula.txt"
+        owner: ubuntu
+        group: ubuntu
+
+    - name: Configure server.properties
+      lineinfile:
+        path: "{{ minecraft_dir }}/server.properties"
+        regexp: '^max-players='
+        line: 'max-players={{ max_players }}'
         owner: ubuntu
         group: ubuntu
 
