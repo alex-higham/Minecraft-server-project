@@ -2,6 +2,9 @@
 - name: Setup Minecraft SErver
   hosts: all
   become: yes
+  vars:
+    minecraft_jar_url: "https://piston-data.mojang.com/v1/objects/e6ec2f64e6080b9b5d9b471b291c33cc7f509733/server.jar"
+    minecraft_dir: "/home/ubuntu/Minecraft"
 
   tasks:
     - name: Update system packages
@@ -14,10 +17,30 @@
         name: openjdk-21-jre-headless
         state: present
     
-    - name: Verify Java Installation
-      command: java -version
-      register: java_version
+    - name: Create Minecraft directory
+      file:
+        path: "{{ minecraft_dir }}"
+        state: directory
+        owner: ubuntu
+        group: ubuntu
+        mode: '0755'
 
-    - name: Display Java version
+    - name: Download Minecraft server jar
+      get_url:
+        url: "{{ minecraft_jar_url }}"
+        dest: "{{ minecraft_dir }}/server.jar"
+        owner: ubuntu
+        group: ubuntu
+        mode: '0644'
+
+    - name: Accept EULA
+      copy:
+        content: "eula=true"
+        dest: "{{ minecraft_dir}}/eula.txt"
+        owner: ubuntu
+        group: ubuntu
+
+    - name: Display completion message
       debug:
-        msg: "Java installed: {{ java_version.stderr_lines[0] }}"
+        msg: "Minecraft server downloaded to {{ minecraft_dir }}"
+
